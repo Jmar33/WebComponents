@@ -11,13 +11,10 @@
   </style>
   <script src="./tooltip.js"></script>
 </head>
-<body>
-  <template id="tooltip-template">
-    <!-- A tag slot permite que o conteúdo no nosso template seja substituído pelo inner html dentro do nosso webComponent -->
-    <slot>Some default </slot><span> (?) </span> 
-  </template>
+<body>    
   <p><uc-tooltip text="Web Component is a set of standards.">Web Components</uc-tooltip>are awsome!</p>
   <!-- Caso nosso component não tenha um valor, o mesmo assume o valor default do slot -->
-  <uc-tooltip></uc-tooltip>
+  <uc-tooltip></uc-tooltip> 
+  <div>This is not affected by webComponent style</div>
 </body>
 </html>

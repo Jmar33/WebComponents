@@ -6,8 +6,18 @@ class Tooltip extends HTMLElement{
     this._tooltipText = 'Some dummy tooltip text.'
     this.attachShadow({mode: 'open'}) //Associa um componente ao shadow root assim, ele passa a ser desacoplado do light DOM, não interferindo ou sofrendo interferência 
                                       //do restante dos componentes
-    const template = document.querySelector('#tooltip-template')
-    this.shadowRoot.appendChild(template.content.cloneNode(true)) // O clone node copia os elementos aninhados além do próprio conteúdo
+    this.shadowRoot.innerHTML = `
+      <style>
+        div {
+          background-color: black;
+          color: white;
+          position: absolute;
+          z-index: 10;
+        }
+      </style>
+      <slot>Some default </slot>
+      <span> (?) </span> 
+    `
   }
 
   //Esse é um ciclo de vida de um web componente que é chamado todas as vezes que um web componente é associado a DOM
@@ -25,10 +35,6 @@ class Tooltip extends HTMLElement{
   _showTooltip(){
     this._tooltipContainer = document.createElement('div')
     this._tooltipContainer.textContent = this._tooltipText
-    this._tooltipContainer.style.backgroundColor = 'black'
-    this._tooltipContainer.style.color = 'white'
-    this._tooltipContainer.style.position = 'absolute'
-    this._tooltipContainer.style.zIndex = '10'
     this.shadowRoot.appendChild(this._tooltipContainer)
   }
 
