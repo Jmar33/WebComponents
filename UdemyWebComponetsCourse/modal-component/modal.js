@@ -22,7 +22,7 @@ class Modal extends HTMLElement{
 
         #modal{
           position: fixed;
-          top: 15vh;
+          top: 10vh;
           left: 25%;
           width: 50%;
           z-index: 100;
@@ -34,6 +34,8 @@ class Modal extends HTMLElement{
           justify-content: space-between;
           opacity: 0;
           pointer-events: none;
+          transition: all 0.3s ease-out
+
         }
 
         :host([opened]) #backdrop,
@@ -42,13 +44,23 @@ class Modal extends HTMLElement{
           pointer-events: all;
         }
 
+        :host([opened]) #modal{
+          top: 15vh;
+        }
+
         header{
           padding: 1rem;
+          border-bottom: 1px solid #ccc;
           
         }
 
         header h1{
           font-size: 1.25rem;
+        }
+
+        ::slotted(h1){
+          font-size: 1.25rem;
+          margin: 0;
         }
 
         #main{
@@ -69,17 +81,31 @@ class Modal extends HTMLElement{
       <div id="backdrop"></div>
       <div id="modal">
         <header class="header">
-          <h1>Please confirm</h1>
+          <slot name="title"></slot>
         </header>
         <section id="main">
           <slot></slot>
         <section>
         <section id="actions">
-          <button>Cancel</button>
-          <button>Okay</button>
+          <button id="btn-cancel">Cancel</button>
+          <button id="btn-confirm">Okay</button>
         </section>
       </div>
     `
+    const slots = this.shadowRoot.querySelectorAll('slot')
+    slots[1].addEventListener('slotchange', event => {
+      console.dir(slots[1].assignedNodes())
+    })
+
+    const cancelButton = this.shadowRoot.querySelector('#btn-cancel')
+    const confirmButton = this.shadowRoot.querySelector('#btn-confirm')
+    const backdrop = this.shadowRoot.querySelector('#backdrop')
+    backdrop.addEventListener('click', this._cancel.bind(this))
+    cancelButton.addEventListener('click', this._cancel.bind(this))
+    confirmButton.addEventListener('click', this._confirm.bind(this))
+    cancelButton.addEventListener('cancel', event => {
+      console.log('Canel was dispatch...')
+    })
   }
   // Como estamos acrescentando uma propriedade css, podemos abrir o modal por meio dos seletores CSS
 
@@ -99,10 +125,28 @@ class Modal extends HTMLElement{
     return ['opened']
   }
 
-
   open(){
     this.setAttribute('opened', '')
     this.isOpen = true;
+  }
+
+  _cancel(event){
+    this.hide()
+    const cancelEvent = new Event('cancel', {bubbles: true, composed: true})
+    event.target.dispatchEvent(cancelEvent)
+  }
+
+  _confirm(){
+    this.hide()
+    const confirmEvent = new Event('confirm')
+    this.dispatchEvent(confirmEvent)
+  }
+
+  hide(){
+    if(this.hasAttribute('opened')){
+      this.removeAttribute('opened')
+    }
+    this.isOpen = false
   }
 }
 
