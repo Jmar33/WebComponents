@@ -4,12 +4,45 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Stencil Component Starter</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
 
+      /* Como não é possível estilizar os itens aninhados dentro de um slot, normalmente o estilizamos na própria DOM */
+      .side-nav ul {
+        list-style: none;
+      }
+
+      .side-nav li {
+        margin: 1rem 0;
+      }
+
+      .side-nav a {
+        text-decoration: none;
+        color: black;
+      }
+
+    </style>
     <script type="module" src="/build/web-components-stencil.esm.js"></script>
     <script nomodule src="/build/web-components-stencil.js"></script>
   </head>
   <body>
-    <uc-side-drawer title="Main Menu"></uc-side-drawer>
+    <uc-side-drawer title="Main Menu">
+      <nav class="side-nav">
+        <ul>
+          <li>
+            <a href="/">A link</a>
+          </li>
+          <li>
+            <a href="/">Another link</a>
+          </li>
+          <li>
+            <a href="/">A third link</a>
+          </li>
+        </ul>
+      </nav>
+    </uc-side-drawer>
     <script>
       const sideDrawer = document.querySelector('uc-side-drawer')
       setTimeout(() => {
