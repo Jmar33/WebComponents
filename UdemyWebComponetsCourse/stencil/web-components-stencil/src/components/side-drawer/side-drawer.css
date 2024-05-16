@@ -17,10 +17,52 @@ aside {
 header{
   padding: 1rem;
   background-color: black;
+  position: relative;
 }
 
 header h1 {
   margin: 0;
   font-size: 1.5rem;
   color: white;
+}
+
+header button{
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  padding: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+header button:focus{
+  outline: none;
+}
+
+#tabs button{
+  width:  30%;
+  background: white;
+  color: black;
+  text-align: center;
+  border: 1px solid black;
+  font: inherit;
+  padding: 0.15rem 0;
+}
+
+#tabs button.active,
+#tabs button:hover,
+#tabs button:active{
+  background: black;
+  color: white;
+}
+
+#tabs button:focus{
+  outline: none;
+}
+
+#contact-information {
+  padding: 0 1rem;
 }
