@@ -7,8 +7,12 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface UcSideDrawer {
-        "open": boolean;
+        "open": () => Promise<void>;
+        "opened": boolean;
         "title": string;
+    }
+    interface UcTooltip {
+        "text": string;
     }
 }
 declare global {
@@ -18,17 +22,28 @@ declare global {
         prototype: HTMLUcSideDrawerElement;
         new (): HTMLUcSideDrawerElement;
     };
+    interface HTMLUcTooltipElement extends Components.UcTooltip, HTMLStencilElement {
+    }
+    var HTMLUcTooltipElement: {
+        prototype: HTMLUcTooltipElement;
+        new (): HTMLUcTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "uc-side-drawer": HTMLUcSideDrawerElement;
+        "uc-tooltip": HTMLUcTooltipElement;
     }
 }
 declare namespace LocalJSX {
     interface UcSideDrawer {
-        "open"?: boolean;
+        "opened"?: boolean;
         "title"?: string;
+    }
+    interface UcTooltip {
+        "text"?: string;
     }
     interface IntrinsicElements {
         "uc-side-drawer": UcSideDrawer;
+        "uc-tooltip": UcTooltip;
     }
 }
 export { LocalJSX as JSX };
@@ -36,6 +51,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "uc-side-drawer": LocalJSX.UcSideDrawer & JSXBase.HTMLAttributes<HTMLUcSideDrawerElement>;
+            "uc-tooltip": LocalJSX.UcTooltip & JSXBase.HTMLAttributes<HTMLUcTooltipElement>;
         }
     }
 }

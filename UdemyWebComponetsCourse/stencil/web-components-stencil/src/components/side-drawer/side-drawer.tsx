@@ -1,4 +1,4 @@
-import { Component, Prop, State } from "@stencil/core/";
+import { Component, Method, Prop, State } from "@stencil/core/";
 import { h } from "@stencil/core";
 
 
@@ -9,7 +9,7 @@ import { h } from "@stencil/core";
 })
 export class SideDrawer {
   @Prop({reflect: true}) title: string = "Side Drawer"
-  @Prop({reflect: true, mutable: true}) open: boolean // Por padrão as propriedades só podem receber o valor vindo do template HTML elas são unidirecionais
+  @Prop({reflect: true, mutable: true}) opened: boolean // Por padrão as propriedades só podem receber o valor vindo do template HTML elas são unidirecionais
                                                       // para alterar esse comportamento devemos trocar o valor do mutable para true
 
   @State() showContactInfo: boolean //O decorator Sate é usado quando queremos monitorar uma propriedade que terá seus valores alterados internamente, dentro do
@@ -17,7 +17,12 @@ export class SideDrawer {
 
   onCloseDrawer(){
     console.log('Closing...')
-    this.open = false;
+    this.opened = false;
+  }
+
+  @Method() //Precisamos do decorator @Method para tornar um método público
+  open(){
+    this.opened = true
   }
 
   onContentChange(content: string){
@@ -53,7 +58,8 @@ export class SideDrawer {
     //   )
     // }
     // return content
-    return (
+    return [
+      <div id="backdrop" onClick={this.onCloseDrawer.bind(this)}></div>,
       <aside>
         <header>
           <h1>{this.title}</h1>
@@ -66,7 +72,7 @@ export class SideDrawer {
           </section>
           {mainContent}
         </menu> 
-      </aside> 
-    )
+      </aside>
+    ]
   }
 }
