@@ -31,6 +31,10 @@ class Tooltip extends HTMLElement{
           border-bottom: 1px dotted red;
         }
 
+        :host{
+          position: relative;
+        }
+
         :host(.important){
           background-color: var(--color-primary, #ccc);
           padding: .15rem;
@@ -61,7 +65,7 @@ class Tooltip extends HTMLElement{
     this._tooltipIcon = this.shadowRoot.querySelector('span')
     tooltipIcon.addEventListener('mouseenter', this._showTooltip.bind(this))
     tooltipIcon.addEventListener('mouseleave', this._hideTooltip.bind(this))
-    this.style.position = 'relative'
+    this._render()
   }
 
   //Essa callback é executada quando alteramos o valor de alguma propriedade
