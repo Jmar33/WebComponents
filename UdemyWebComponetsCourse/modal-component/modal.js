@@ -1,6 +1,7 @@
 class Modal extends HTMLElement{
   constructor(){
     super()
+    this.isOpen = false
     this.attachShadow({mode: 'open'})
   }
 
@@ -33,6 +34,12 @@ class Modal extends HTMLElement{
           justify-content: space-between;
           opacity: 0;
           pointer-events: none;
+        }
+
+        :host([opened]) #backdrop,
+        :host([opened]) #modal{
+          opacity: 1;
+          pointer-events: all;
         }
 
         header{
@@ -74,24 +81,28 @@ class Modal extends HTMLElement{
       </div>
     `
   }
+  // Como estamos acrescentando uma propriedade css, podemos abrir o modal por meio dos seletores CSS
 
   attributeChangedCallback(name, oldValue, newValue){
     if(oldValue === newValue){
       return;
     }
     if(name === 'opened' && this.hasAttribute('opened')){
-      const backdrop = this.shadowRoot.querySelector('#backdrop');
-      const modal = this.shadowRoot.querySelector('#modal');
-      backdrop.style.opacity = 1;
-      backdrop.style.pointerEvents = 'all';
-      modal.style.opacity = 1;
-      modal.style.pointerEvents = 'all';
+      this.isOpen = true;
+    }else{
+      this.isOpen = false;
     }
 
   }
 
   static get observedAttributes(){
     return ['opened']
+  }
+
+
+  open(){
+    this.setAttribute('opened', '')
+    this.isOpen = true;
   }
 }
 

@@ -26,7 +26,10 @@
     const buttonConfirm = document.querySelector('button');
     const modal = document.querySelector('uc-modal');
     buttonConfirm.addEventListener('click', () => {
-      modal.setAttribute('opened', '')
+      if(!modal.isOpen){
+        console.log('Is opening...')
+        modal.open()
+      }
     })
   </script>
 </body>
