@@ -5,25 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
     html{
       --color-primary: #a4fcda;
     }
 
-
-    div {
-      border: 2px solid orange
-    }
-
-    /* .highlight{
-      background-color: #f7d28e;
-      border-bottom: 1px solid blue;
-      
-    } */
-
-    uc-tooltip{
-      border: 1px solid blue;
-      padding: .15rem;
-    }
     /* É possível estilizar elementos que estão na light DOM através da SHADOW DOM usando o pseudo elemento ::slotted
       mas é importante destacar que sempre a light DOM irá sobrescrever a SHADOW DOM
     */
@@ -39,7 +29,6 @@
   </p>
   <!-- Caso nosso component não tenha um valor, o mesmo assume o valor default do slot -->
   <uc-tooltip></uc-tooltip> 
-  <div>This is not affected by webComponent style</div>
   <!-- Quando extendemos um componente, apenas usamos uma propriedade para dizer qual o comportamento o componente deve seguir
   -->
   <a is="uc-confirm-link" href="https://www.google.com.br">Google</a>
