@@ -15,6 +15,8 @@ class Modal extends HTMLElement{
           height: 100vh;
           background-color: rgba(0,0,0,0.75);
           z-index: 10;
+          opacity: 0;
+          pointer-events: none;
         }
 
         #modal{
@@ -29,6 +31,8 @@ class Modal extends HTMLElement{
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          opacity: 0;
+          pointer-events: none;
         }
 
         header{
@@ -69,6 +73,25 @@ class Modal extends HTMLElement{
         </section>
       </div>
     `
+  }
+
+  attributeChangedCallback(name, oldValue, newValue){
+    if(oldValue === newValue){
+      return;
+    }
+    if(name === 'opened' && this.hasAttribute('opened')){
+      const backdrop = this.shadowRoot.querySelector('#backdrop');
+      const modal = this.shadowRoot.querySelector('#modal');
+      backdrop.style.opacity = 1;
+      backdrop.style.pointerEvents = 'all';
+      modal.style.opacity = 1;
+      modal.style.pointerEvents = 'all';
+    }
+
+  }
+
+  static get observedAttributes(){
+    return ['opened']
   }
 }
 
