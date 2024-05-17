@@ -10,10 +10,12 @@ export class StockFinder {
   stockNameInput: HTMLInputElement
 
   @State() searchResults: {name: string, symbol: string}[] = []
+  @State() lodiang = false;
   @Event({bubbles: true, composed: true}) ucSymbolSelected: EventEmitter<string>
 
   
   onFindStocks(event: Event){
+    this.lodiang = true
     event.preventDefault()
     const stockName = this.stockNameInput.value
     fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stockName}&apikey=${AV_API_KEY}`)
@@ -23,8 +25,10 @@ export class StockFinder {
         this.searchResults = parsedRes['bestMatches'].map(match => {
           return {name: match['01. name'], symbol: match['02. symbol']}
         })
+        this.lodiang= false
       })
       .catch(err => {
+        this.lodiang = false
         console.log(err)
       })
   }

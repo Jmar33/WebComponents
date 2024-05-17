@@ -1,4 +1,4 @@
-import { Component, State, h, Element, Prop, Watch } from "@stencil/core";
+import { Component, State, h, Element, Prop, Watch, Listen } from "@stencil/core";
 import { AV_API_KEY } from "../../global/global";
 
 @Component({
@@ -16,7 +16,9 @@ export class StockPrince{
   @State() stockUserInput: string
   @State() stockInputValid = false
   @State() error: string
+  @State() loading = false
   @Prop({mutable: true, reflect: true}) stockSymbol: string
+
 
   onUserInput(event: Event){
     this.stockUserInput = (event.target as HTMLInputElement).value
@@ -31,6 +33,7 @@ export class StockPrince{
   stockSymbolChanged(newValue: string, oldValue:string){
     if(newValue !== oldValue){
       this.stockUserInput = newValue
+      this.stockInputValid = true
       this.fetchStockPrice(newValue)
     }
 
@@ -82,7 +85,16 @@ export class StockPrince{
    
   }
 
+  @Listen('ucSymbolSelected', {target: "body"})
+  onStockSymbolSelected(event: CustomEvent){
+    console.log('stock symbol selected: ' + event.detail)
+    if(event.detail && event.detail !== this.stockSymbol){
+      this.stockSymbol = event.detail
+    }
+  }
+
   fetchStockPrice(stockSymbol: string){
+    this.loading = true
     fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stockSymbol}&apikey=${AV_API_KEY}`)
     .then(res => {
       if(res.status !== 200){
@@ -96,10 +108,18 @@ export class StockPrince{
       }
       this.error = null
       this.fetchedPrice = + parsedRes['Global Quote']['05. price']
+      this.loading = false
     })
     .catch(err => {
       this.error = err.message
+      this.fetchedPrice = null
+      this.loading = false
     })
+  }
+
+  // Esse método do stencil nos permite acessar alguns metadados do nosso próprio componentes
+  hostData(){
+    return { class: this.error ? 'error' : ''}
   }
 
   render(){
@@ -109,6 +129,9 @@ export class StockPrince{
     }
     if(this.fetchedPrice){
       dataContent = <p>Price: ${this.fetchedPrice}</p>
+    }
+    if(this.loading){
+      dataContent = <uc-spinner></uc-spinner>;
     }
     return [
       <form onSubmit={this.onFetchStockPrice.bind(this)}>
