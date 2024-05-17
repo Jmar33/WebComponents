@@ -12,6 +12,7 @@ export namespace Components {
         "title": string;
     }
     interface UcStockPrice {
+        "stockSymbol": string;
     }
     interface UcTooltip {
         "text": string;
@@ -48,6 +49,7 @@ declare namespace LocalJSX {
         "title"?: string;
     }
     interface UcStockPrice {
+        "stockSymbol"?: string;
     }
     interface UcTooltip {
         "text"?: string;
