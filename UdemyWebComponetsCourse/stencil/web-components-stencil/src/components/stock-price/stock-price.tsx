@@ -12,6 +12,17 @@ export class StockPrince{
   @Element() el: HTMLElement //É possível acessar um elemento HTML dentro do nosso componente por meio do decorator Element para referenciar o elemento root
 
   @State() fetchedPrice: number
+  @State() stockUserInput: string
+  @State() stockInputValid = false;
+
+  onUserInput(event: Event){
+    this.stockUserInput = (event.target as HTMLInputElement).value
+    if(this.stockUserInput.trim() !== ''){
+      this.stockInputValid = true
+    }else{
+      this.stockInputValid = false
+    }
+  }
 
   onFetchStockPrice(event: Event){
     event.preventDefault();
@@ -34,8 +45,12 @@ export class StockPrince{
     return [
       <form onSubmit={this.onFetchStockPrice.bind(this)}>
         {/* Outra forma de acessar um elemento da DOM do nosso componente é criando uma referência */}
-        <input id="stock-symbol" ref={el => this.stockInput = el}/>
-        <button type="submit">Fetch</button>
+        <input id="stock-symbol" 
+          ref={el => this.stockInput = el}
+          value={this.stockUserInput}
+          onInput={this.onUserInput.bind(this)}
+        />
+        <button type="submit" disabled={!this.stockInputValid}>Fetch</button>
       </form>,
       <div>
         <p>Price: ${this.fetchedPrice}</p>
