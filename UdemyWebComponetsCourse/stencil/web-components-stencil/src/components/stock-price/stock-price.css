@@ -12,6 +12,8 @@ form input{
   font: inherit;
   color: #3b013b;
   padding: 0.1rem 0.25rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 form input:focus{
