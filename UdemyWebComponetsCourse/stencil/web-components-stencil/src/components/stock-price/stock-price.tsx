@@ -1,4 +1,4 @@
-import { Component, State, h, Element, Prop } from "@stencil/core";
+import { Component, State, h, Element, Prop, Watch } from "@stencil/core";
 import { AV_API_KEY } from "../../global/global";
 
 @Component({
@@ -8,6 +8,7 @@ import { AV_API_KEY } from "../../global/global";
 })
 export class StockPrince{
   stockInput: HTMLInputElement
+  // initialStockSymbol: string
 
   @Element() el: HTMLElement //É possível acessar um elemento HTML dentro do nosso componente por meio do decorator Element para referenciar o elemento root
 
@@ -15,7 +16,7 @@ export class StockPrince{
   @State() stockUserInput: string
   @State() stockInputValid = false
   @State() error: string
-  @Prop() stockSymbol: string
+  @Prop({mutable: true, reflect: true}) stockSymbol: string
 
   onUserInput(event: Event){
     this.stockUserInput = (event.target as HTMLInputElement).value
@@ -24,6 +25,15 @@ export class StockPrince{
     }else{
       this.stockInputValid = false
     }
+  }
+
+  @Watch('stockSymbol')
+  stockSymbolChanged(newValue: string, oldValue:string){
+    if(newValue !== oldValue){
+      this.stockUserInput = newValue
+      this.fetchStockPrice(newValue)
+    }
+
   }
 
   componentWillLoad(){
@@ -38,6 +48,9 @@ export class StockPrince{
     // Caso o valor de uma propriedade stateful seja alterada, o componente seré re-renderizado
     console.log('componentDidLoad')
     if(this.stockSymbol){
+      // this.initialStockSymbol = this.stockSymbol
+      this.stockUserInput = this.stockSymbol
+      this.stockInputValid = true
       this.fetchStockPrice(this.stockSymbol)
     }
   }
@@ -50,6 +63,10 @@ export class StockPrince{
   componentDidUpdate(){
     // Esse lifecycle hook é executado logo após o componente ter sido re-renderizado por conta de alguma alteração de propriedade ou estado
     console.log('componentDidUpdate')
+    // if(this.stockSymbol !== this.initialStockSymbol){
+    //   this.initialStockSymbol = this.stockSymbol
+    //   this.fetchStockPrice(this.stockSymbol)
+    // }
   }
 
   disconnectedCallback(){
