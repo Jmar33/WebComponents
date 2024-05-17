@@ -26,10 +26,35 @@ export class StockPrince{
     }
   }
 
+  componentWillLoad(){
+    // Esse lifecycle hook é executado quando o componente está prestes a ser carregado na DOM pela primeira vez
+    // Aqui já temos acessos as propriedades, mas é esse hook é melhor pra caso precisemos alterar alguma propriedade stateful
+    console.log('componentWillLoad')
+    console.log(this.stockSymbol)
+  }
+  
   componentDidLoad(){
+    // Esse lifecycle hook é executado logo após o componente ser renderizado na DOM 
+    // Caso o valor de uma propriedade stateful seja alterada, o componente seré re-renderizado
+    console.log('componentDidLoad')
     if(this.stockSymbol){
       this.fetchStockPrice(this.stockSymbol)
     }
+  }
+
+  componentWillUpdate(){
+    // Esse lifecycle é executado segundos antes do componente ser re-renderizado após alguma alteração propriedade ou estado
+    console.log('componentWillUpdate')
+  }
+
+  componentDidUpdate(){
+    // Esse lifecycle hook é executado logo após o componente ter sido re-renderizado por conta de alguma alteração de propriedade ou estado
+    console.log('componentDidUpdate')
+  }
+
+  disconnectedCallback(){
+    // Esse lifecycle hook é executado logo após o componente ter sido removido da DOM
+    console.log('disconnectedCallback')    
   }
 
   onFetchStockPrice(event: Event){
