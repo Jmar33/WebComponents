@@ -34,7 +34,19 @@
     <script nomodule src="/build/web-components-stencil.js"></script>
   </head>
   <body>
+    <uc-table  
+    ></uc-table>
+    <script>
+      const table  = document.querySelector('uc-table');
+      table.displayColumns =[{key: 'test', displayName: 'Test', filterList: ['Testando 1', 'Testando 3']},{key: 'test2', displayName: 'Test 2', filterList: ['Testando 2']}] 
+      table.dataTable = [
+	      {test: 'Testando 1', test2: 'Testando 2 '},
+	      {test: 'Testando 3', test2: 'Testando 4 '},
+	      {test: 'Testando 5', test2: 'Testando 6 '},
+      ]
+    </script>
     <!-- <button id="side-drawer-btn">Open Side Menu</button>
+          data-table = 
     <uc-side-drawer title="Main Menu">
       <nav class="side-nav">
         <ul>
@@ -50,8 +62,8 @@
         </ul>
       </nav>
     </uc-side-drawer> -->
-    <uc-stock-price stock-symbol="AAPL"></uc-stock-price>
-    <uc-stock-finder></uc-stock-finder>
+    <!-- <uc-stock-price stock-symbol="AAPL"></uc-stock-price>
+    <uc-stock-finder></uc-stock-finder> -->
     <!-- <p>Let's test this new <uc-tooltip text="Web component is a set of standarts. ">Tooltip!</uc-tooltip></p>
     <script>
       const sideDrawerButton = document.querySelector('#side-drawer-btn')

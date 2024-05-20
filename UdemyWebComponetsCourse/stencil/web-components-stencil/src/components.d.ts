@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Column } from "./components/table/table";
+export { Column } from "./components/table/table";
 export namespace Components {
     interface UcSideDrawer {
         "open": () => Promise<void>;
@@ -17,6 +19,10 @@ export namespace Components {
     }
     interface UcStockPrice {
         "stockSymbol": string;
+    }
+    interface UcTable {
+        "dataTable": any[];
+        "displayColumns": Column[];
     }
     interface UcTooltip {
         "text": string;
@@ -62,6 +68,12 @@ declare global {
         prototype: HTMLUcStockPriceElement;
         new (): HTMLUcStockPriceElement;
     };
+    interface HTMLUcTableElement extends Components.UcTable, HTMLStencilElement {
+    }
+    var HTMLUcTableElement: {
+        prototype: HTMLUcTableElement;
+        new (): HTMLUcTableElement;
+    };
     interface HTMLUcTooltipElement extends Components.UcTooltip, HTMLStencilElement {
     }
     var HTMLUcTooltipElement: {
@@ -73,6 +85,7 @@ declare global {
         "uc-spinner": HTMLUcSpinnerElement;
         "uc-stock-finder": HTMLUcStockFinderElement;
         "uc-stock-price": HTMLUcStockPriceElement;
+        "uc-table": HTMLUcTableElement;
         "uc-tooltip": HTMLUcTooltipElement;
     }
 }
@@ -89,6 +102,10 @@ declare namespace LocalJSX {
     interface UcStockPrice {
         "stockSymbol"?: string;
     }
+    interface UcTable {
+        "dataTable"?: any[];
+        "displayColumns"?: Column[];
+    }
     interface UcTooltip {
         "text"?: string;
     }
@@ -97,6 +114,7 @@ declare namespace LocalJSX {
         "uc-spinner": UcSpinner;
         "uc-stock-finder": UcStockFinder;
         "uc-stock-price": UcStockPrice;
+        "uc-table": UcTable;
         "uc-tooltip": UcTooltip;
     }
 }
@@ -108,6 +126,7 @@ declare module "@stencil/core" {
             "uc-spinner": LocalJSX.UcSpinner & JSXBase.HTMLAttributes<HTMLUcSpinnerElement>;
             "uc-stock-finder": LocalJSX.UcStockFinder & JSXBase.HTMLAttributes<HTMLUcStockFinderElement>;
             "uc-stock-price": LocalJSX.UcStockPrice & JSXBase.HTMLAttributes<HTMLUcStockPriceElement>;
+            "uc-table": LocalJSX.UcTable & JSXBase.HTMLAttributes<HTMLUcTableElement>;
             "uc-tooltip": LocalJSX.UcTooltip & JSXBase.HTMLAttributes<HTMLUcTooltipElement>;
         }
     }
