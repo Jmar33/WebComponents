@@ -8,6 +8,10 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Column } from "./components/table/table";
 export { Column } from "./components/table/table";
 export namespace Components {
+    interface UcOpenList {
+        "optionsList": any[];
+        "selectedOptions": any[];
+    }
     interface UcSideDrawer {
         "open": () => Promise<void>;
         "opened": boolean;
@@ -33,6 +37,12 @@ export interface UcStockFinderCustomEvent<T> extends CustomEvent<T> {
     target: HTMLUcStockFinderElement;
 }
 declare global {
+    interface HTMLUcOpenListElement extends Components.UcOpenList, HTMLStencilElement {
+    }
+    var HTMLUcOpenListElement: {
+        prototype: HTMLUcOpenListElement;
+        new (): HTMLUcOpenListElement;
+    };
     interface HTMLUcSideDrawerElement extends Components.UcSideDrawer, HTMLStencilElement {
     }
     var HTMLUcSideDrawerElement: {
@@ -81,6 +91,7 @@ declare global {
         new (): HTMLUcTooltipElement;
     };
     interface HTMLElementTagNameMap {
+        "uc-open-list": HTMLUcOpenListElement;
         "uc-side-drawer": HTMLUcSideDrawerElement;
         "uc-spinner": HTMLUcSpinnerElement;
         "uc-stock-finder": HTMLUcStockFinderElement;
@@ -90,6 +101,10 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface UcOpenList {
+        "optionsList"?: any[];
+        "selectedOptions"?: any[];
+    }
     interface UcSideDrawer {
         "opened"?: boolean;
         "title"?: string;
@@ -110,6 +125,7 @@ declare namespace LocalJSX {
         "text"?: string;
     }
     interface IntrinsicElements {
+        "uc-open-list": UcOpenList;
         "uc-side-drawer": UcSideDrawer;
         "uc-spinner": UcSpinner;
         "uc-stock-finder": UcStockFinder;
@@ -122,6 +138,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "uc-open-list": LocalJSX.UcOpenList & JSXBase.HTMLAttributes<HTMLUcOpenListElement>;
             "uc-side-drawer": LocalJSX.UcSideDrawer & JSXBase.HTMLAttributes<HTMLUcSideDrawerElement>;
             "uc-spinner": LocalJSX.UcSpinner & JSXBase.HTMLAttributes<HTMLUcSpinnerElement>;
             "uc-stock-finder": LocalJSX.UcStockFinder & JSXBase.HTMLAttributes<HTMLUcStockFinderElement>;
