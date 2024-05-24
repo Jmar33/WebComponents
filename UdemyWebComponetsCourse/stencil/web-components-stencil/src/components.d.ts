@@ -9,6 +9,9 @@ import { Column } from "./components/table/table";
 export { Column } from "./components/table/table";
 export namespace Components {
     interface UcOpenList {
+        "close": () => Promise<void>;
+        "open": () => Promise<void>;
+        "opened": boolean;
         "optionsList": any[];
         "selectedOptions": any[];
     }
@@ -32,12 +35,27 @@ export namespace Components {
         "text": string;
     }
 }
+export interface UcOpenListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLUcOpenListElement;
+}
 export interface UcStockFinderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLUcStockFinderElement;
 }
 declare global {
+    interface HTMLUcOpenListElementEventMap {
+        "emitFilterItens": any;
+    }
     interface HTMLUcOpenListElement extends Components.UcOpenList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLUcOpenListElementEventMap>(type: K, listener: (this: HTMLUcOpenListElement, ev: UcOpenListCustomEvent<HTMLUcOpenListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLUcOpenListElementEventMap>(type: K, listener: (this: HTMLUcOpenListElement, ev: UcOpenListCustomEvent<HTMLUcOpenListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLUcOpenListElement: {
         prototype: HTMLUcOpenListElement;
@@ -102,6 +120,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface UcOpenList {
+        "onEmitFilterItens"?: (event: UcOpenListCustomEvent<any>) => void;
+        "opened"?: boolean;
         "optionsList"?: any[];
         "selectedOptions"?: any[];
     }

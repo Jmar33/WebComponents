@@ -34,8 +34,16 @@
     <script nomodule src="/build/web-components-stencil.js"></script>
   </head>
   <body>
+    <uc-table></uc-table>
     <uc-open-list ></uc-open-list>
     <script>
+      const table  = document.querySelector('uc-table');
+      table.displayColumns =[{key: 'test', displayName: 'Test', filterList: ['Testando 1', 'Testando 3']},{key: 'test2', displayName: 'Test 2', filterList: ['Testando 2']}, {key: 'test3', displayName: 'Test 3', filterList: ['Testando 3']}] 
+      table.dataTable = [
+	      {test: 'Testando 1', test2: 'Testando 2 ', test3: 'Testando 3'},
+	      {test: 'Testando 3', test2: 'Testando 4 ', test3: 'Testando 8'},
+	      {test: 'Testando 5', test2: 'Testando 6 ', test3: 'Testando 9'},
+      ]
       const openList = document.querySelector('uc-open-list');
       openList.optionsList = ['Teste 1', 'Lorem Ipsum', 'Teste Lorem', 'Ipsum 2']
     </script>

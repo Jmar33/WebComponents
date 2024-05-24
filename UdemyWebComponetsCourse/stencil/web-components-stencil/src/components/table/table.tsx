@@ -1,4 +1,4 @@
-import {Component, Prop, State, h} from '@stencil/core'
+import {Component, Element, Listen, Prop, State, h} from '@stencil/core'
 
 export interface Column {
   key: string,
@@ -12,7 +12,8 @@ export interface Column {
   shadow: true
 })
 export class Table {
-  tableElement: HTMLTableElement
+  tableElement: HTMLTableElement;
+  openList: HTMLUcOpenListElement;
 
   @Prop() dataTable:any[] = [];
   @Prop() displayColumns: Column[] = [];
@@ -74,54 +75,95 @@ export class Table {
     }
   }
 
-  filterTableByColumn(columnIndex: number){
-    let filterList: any[] ,
-    rows: HTMLCollectionOf<HTMLTableRowElement>,
+  openFilter(columnIndex: number){
+    const filterList = new Set([]) 
+    let rows: HTMLCollectionOf<HTMLTableRowElement>,
     td: Element, 
-    rowIndex: number, 
-    txtValue:string;
+    
+    filterIcon: Element
 
     rows = this.tableElement.rows;
     // // Loop through all table rows, and hide those who don't match the search query
-    for (rowIndex = 1; rowIndex <= rows.length -1; rowIndex++) {
-      td = rows[rowIndex].getElementsByTagName("td")[columnIndex];
-      console.log(td)
+    for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+      td = rows[rowIndex].getElementsByTagName("td")[columnIndex]
+      
       if (td) {
-        console.log(this.displayColumns[columnIndex])
-        filterList = this.displayColumns[columnIndex].filterList.map(filterOption => filterOption.trim().toLowerCase());
-        txtValue = td.textContent.trim().toLowerCase();
-        console.log(txtValue.toLowerCase())
-        console.log(filterList)
-        console.log(filterList.includes('testando 2'))
-        console.log(filterList.includes(txtValue))
-        if (filterList.includes(txtValue)) {
-          console.log(rows[rowIndex])
-          console.log(txtValue.toLowerCase())
-          rows[rowIndex].style.display = "";
-        } else {
-          console.log(rows[rowIndex])
-          rows[rowIndex].style.display = "none";
-        }
+        filterList.add(td.textContent.trim())
       }
     }
+
+    for(let i = 0; i < this.displayColumns.length; i++){
+      filterIcon = rows[0].getElementsByTagName("th")[i].getElementsByClassName("head__data-container")[0]
+      if(filterIcon.classList.contains("relative")){
+        filterIcon.classList.remove("relative")
+      }
+
+    }
+
+    filterIcon = rows[0].getElementsByTagName("th")[columnIndex].getElementsByClassName("head__data-container")[0]
+    if(filterIcon){
+      console.log("esse é o filtro", filterIcon)
+      filterIcon.classList.add("relative")
+      filterIcon.appendChild(this.tableElement.getElementsByTagName("uc-open-list")[0])
+    }
+
+    this.openList.optionsList = Array.from(filterList)
+    if(this.openList.opened){
+      this.openList.close()
+    }
+    this.openList.open()
+
+    // (async () => {
+    //   await customElements.whenDefined('uc-open-list');
+
+    // })
+    
+
+    
+      // console.log(td)
+      // if (td) {
+      //   console.log(this.displayColumns[columnIndex])
+      //   filterList = this.displayColumns[columnIndex].filterList.map(filterOption => filterOption.trim().toLowerCase());
+      //   txtValue = td.textContent.trim().toLowerCase();
+      //   console.log(txtValue.toLowerCase())
+      //   console.log(filterList)
+      //   console.log(filterList.includes('testando 2'))
+      //   console.log(filterList.includes(txtValue))
+      //   if (filterList.includes(txtValue)) {
+      //     console.log(rows[rowIndex])
+      //     console.log(txtValue.toLowerCase())
+      //     rows[rowIndex].style.display = "";
+      //   } else {
+      //     console.log(rows[rowIndex])
+      //     rows[rowIndex].style.display = "none";
+      //   }
+      // }
+    // }
 
     console.log(this.tableElement.rows)
     console.log(this.dataTable)
   }
 
+
+  @Listen('emitFilterItens')
+  filterTableByColumns(event: CustomEvent){
+    console.log(event.detail)
+    const filterList = Array.from(event.detail as string[]).map((filterOption) => filterOption.trim().toLowerCase()) 
+    let rows: HTMLCollectionOf<HTMLTableRowElement> = this.tableElement.rows
+
+    for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+      const cells = Array.from(rows[rowIndex].getElementsByTagName("td"));
+      if(!cells.some((cell) => filterList.includes(cell.textContent.trim().toLowerCase()))){
+        rows[rowIndex].style.display = "none";
+      }else{
+        rows[rowIndex].style.display = "";
+      }
+    }
+  
+  } 
  
 
 
-  render(){
-    return (
-      <div class="table__cotainer">
-        <table class="table" ref={el => this.tableElement = el}>
-          {this.buildHead()}
-          {this.buildBody()}
-        </table>
-      </div>
-    )
-  }
 
   buildHead(): HTMLElement{
     return (
@@ -132,14 +174,17 @@ export class Table {
                       <div class="head__data-container">
                         <icon onClick={this.sortTable.bind(this, index)} class="table__icon--order">^</icon>
                         <span>{column.displayName}</span>
-                        <icon onClick={this.filterTableByColumn.bind(this, index)} class="table__icon--filter">f</icon>
+                        <icon onClick={this.openFilter.bind(this, index)} class="table__icon--filter">f
+                        </icon>
                       </div>
+                      
                     </th>
             })
           }
         </tr>
       </thead>
-    ) 
+     
+    )
   }
 
 
@@ -160,6 +205,20 @@ export class Table {
             })
         }
       </tbody>      
+    )
+  }
+
+
+  render(){
+    return (
+      // <div class="table__cotainer">
+        <table class="table" ref={el => this.tableElement = el}>
+          {this.buildHead()}
+          {this.buildBody()}
+          <uc-open-list ref={el => this.openList = el}></uc-open-list>
+        </table>
+        
+      // </div>
     )
   }
 }
